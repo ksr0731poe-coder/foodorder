@@ -1,0 +1,626 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap');
+
+/* =========================
+   Global
+========================= */
+
+:root {
+    --brand: #de642e;
+    --brand-dark: #bf4d1c;
+    --ink: #282622;
+    --muted: #77736f;
+    --line: #e7e2dd;
+    --soft: #faf8f5;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.65;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    color: var(--brand);
+}
+
+/* =========================
+   Header
+========================= */
+
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+}
+
+.site-header .navbar {
+    background: #fff;
+}
+
+.navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.brand-icon {
+    display: inline-flex;
+    width: 35px;
+    height: 35px;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 19px;
+}
+
+.brand-accent {
+    color: var(--brand);
+}
+
+.navbar .nav-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: var(--brand);
+}
+
+.login-link {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.btn-brand {
+    background: var(--brand);
+    border: 1px solid var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 17px;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+    color: #fff;
+    background: var(--brand-dark);
+    border-color: var(--brand-dark);
+}
+
+/* =========================
+   Hero Section
+========================= */
+
+.hero-section {
+    padding: 69px 0 51px;
+    background: linear-gradient(
+            105deg,
+            #fcf8f2 0%,
+            #fff4e8 100%
+    );
+}
+
+.section-kicker,
+.banner-kicker {
+    display: inline-block;
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+}
+
+.hero-title {
+    margin: 18px 0;
+    font-size: clamp(37px, 4.1vw, 57px);
+    line-height: 1.31;
+    letter-spacing: -2px;
+    font-weight: 800;
+}
+
+.hero-title span {
+    color: var(--brand);
+}
+
+.hero-subtitle {
+    color: #645c54;
+    font-size: 14px;
+    line-height: 1.9;
+    margin-top: 20px;
+}
+
+.hero-photo {
+    display: block;
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+/* =========================
+   Search
+========================= */
+
+.search-panel {
+    background: #fff;
+    border: 1px solid #e9e0d7;
+    border-radius: 3px;
+    padding: 22px 24px;
+    margin-top: 42px;
+    box-shadow: 0 6px 19px rgba(64, 48, 36, 0.045);
+}
+
+.search-panel .form-label {
+    color: #484442;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.search-panel .form-control,
+.search-panel .form-select {
+    height: 47px;
+    border-radius: 2px;
+    border: 1px solid #dcd6d0;
+    font-size: 13px;
+}
+
+.search-panel .form-control:focus,
+.search-panel .form-select:focus {
+    border-color: #efaa8f;
+    box-shadow: 0 0 0 0.15rem rgba(236, 97, 45, 0.12);
+}
+
+.search-button {
+    height: 47px;
+    width: 100%;
+}
+
+/* =========================
+   Common Section
+========================= */
+
+.section-space {
+    padding: 70px 0;
+}
+
+.section-heading h2 {
+    font-size: clamp(22px, 2.6vw, 29px);
+    font-weight: 800;
+    margin: 9px 0 6px;
+    letter-spacing: -0.6px;
+}
+
+.section-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.section-more {
+    color: var(--brand);
+    border-bottom: 1px solid var(--brand);
+    padding-bottom: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.section-more:hover {
+    color: var(--brand-dark);
+}
+
+/* =========================
+   Popular Regions
+========================= */
+
+.region-card {
+    display: block;
+    height: 184px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    background-color: #b0a09a;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.2s;
+}
+
+.region-card:hover {
+    opacity: 0.87;
+}
+
+.region-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            180deg,
+            transparent 25%,
+            rgba(0, 0, 0, 0.72) 100%
+    );
+}
+
+.region-label {
+    position: absolute;
+    bottom: 12px;
+    left: 13px;
+    z-index: 1;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.region-label small {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+.region-card:hover .region-label {
+    color: #fff;
+}
+
+.region-tokyo {
+    background-image: url(
+    'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=550&q=85'
+    );
+}
+
+.region-osaka {
+    background-image: url(
+    'https://images.unsplash.com/photo-1590253230532-a67f4bc61c9e?auto=format&fit=crop&w=550&q=85'
+    );
+}
+
+.region-kyoto {
+    background-image: url(
+    'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=550&q=85'
+    );
+}
+
+.region-fukuoka {
+    background-image: url(
+    'https://images.unsplash.com/photo-1480796927426-f609979314bd?auto=format&fit=crop&w=550&q=85'
+    );
+}
+
+.region-sapporo {
+    background-image: url(
+    'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=550&q=85'
+    );
+}
+
+.region-nagoya {
+    background-image: url(
+    'https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=550&q=85'
+    );
+}
+
+/* =========================
+   Food Categories
+========================= */
+
+.category-section {
+    background: #f9f7f4;
+    border-top: 1px solid #f2eeea;
+    border-bottom: 1px solid #f2eeea;
+}
+
+.category-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 72px;
+    padding: 17px 18px;
+    border: 1px solid #f0e7df;
+    border-radius: 2px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.category-card:hover {
+    background: #fff9f4;
+    border-color: #dea889;
+}
+
+.category-emoji {
+    font-size: 25px;
+}
+
+.category-card .bi {
+    margin-left: auto;
+    color: #b6aaa4;
+    font-size: 12px;
+}
+
+/* =========================
+   Restaurant Cards
+========================= */
+
+.restaurant-card {
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.restaurant-card:hover {
+    border-color: #c9bfb5;
+}
+
+.restaurant-img-wrap {
+    display: block;
+    position: relative;
+    aspect-ratio: 1.75;
+    overflow: hidden;
+}
+
+.restaurant-img-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.category-chip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 4px 9px;
+    background: #fff;
+    color: #42403e;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.restaurant-info {
+    padding: 16px 17px;
+}
+
+.restaurant-meta {
+    color: #958c85;
+    font-size: 12px;
+}
+
+.restaurant-info h3 {
+    margin: 7px 0;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.restaurant-info h3 a:hover {
+    color: var(--brand);
+}
+
+.restaurant-info p {
+    color: #8e8580;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 13px;
+}
+
+.restaurant-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid #f1ece8;
+    padding-top: 12px;
+}
+
+.rating {
+    color: #e69c1b;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.rating small {
+    color: #a69b94;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.price {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6e625c;
+}
+
+/* =========================
+   Membership Banner
+========================= */
+
+.discover-banner {
+    padding: 39px 46px;
+    background: #dd652f;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.banner-kicker {
+    color: #ffe4d2;
+}
+
+.discover-banner h2 {
+    margin: 11px 0;
+    font-size: 26px;
+    line-height: 1.4;
+    font-weight: 800;
+}
+
+.discover-banner p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.banner-button {
+    color: #cd4d20;
+    border-radius: 2px;
+    padding: 13px 23px;
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.banner-button:hover {
+    color: var(--brand-dark);
+}
+
+/* =========================
+   Footer
+========================= */
+
+.site-footer {
+    padding: 55px 0 25px;
+    background: #292724;
+    color: #e8e0db;
+}
+
+.footer-brand {
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.footer-brand span {
+    color: var(--brand);
+}
+
+.footer-brand:hover {
+    color: #fff;
+}
+
+.site-footer p {
+    margin: 13px 0;
+    color: #c4b9b3;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.site-footer small {
+    color: #9b918b;
+    font-size: 11px;
+}
+
+.site-footer h3 {
+    font-size: 13px;
+    font-weight: 800;
+    margin: 7px 0 16px;
+}
+
+.site-footer a:not(.footer-brand) {
+    display: block;
+    color: #c1b6b1;
+    font-size: 12px;
+    margin: 11px 0;
+}
+
+.site-footer a:hover {
+    color: #fff;
+}
+
+.site-footer hr {
+    border-color: #544d49;
+    margin: 36px 0 20px;
+}
+
+.footer-bottom {
+    color: #a89f99;
+    font-size: 11px;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 991.98px) {
+
+    .hero-section {
+        padding-top: 52px;
+    }
+
+    .search-panel {
+        margin-top: 31px;
+    }
+
+    .section-space {
+        padding: 56px 0;
+    }
+
+    .header-actions {
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .hero-section {
+        padding: 44px 0;
+    }
+
+    .hero-title {
+        letter-spacing: -1.3px;
+    }
+
+    .search-panel {
+        padding: 15px;
+    }
+
+    .section-space {
+        padding: 45px 0;
+    }
+
+    .region-card {
+        height: 155px;
+    }
+
+    .category-card {
+        padding: 12px 10px;
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .category-emoji {
+        font-size: 23px;
+    }
+
+    .restaurant-bottom {
+        flex-wrap: wrap;
+    }
+
+    .discover-banner {
+        padding: 27px 23px;
+    }
+
+    .discover-banner h2 {
+        font-size: 23px;
+    }
+}

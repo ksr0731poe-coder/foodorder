@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodOrder | 日本のおいしいお店を探す</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/main.css}" href="/main.css">
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container py-2">
+
+            <a class="navbar-brand" href="/">
+                <span class="brand-icon">
+                    <i class="bi bi-egg-fried"></i>
+                </span>
+                food<span class="brand-accent">order</span>
+            </a>
+
+            <button class="navbar-toggler border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="メニューを開く">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-auto gap-lg-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            ホーム
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/restaurants">
+                            お店を探す
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#regions">
+                            人気のエリア
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categories">
+                            料理のジャンル
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3 header-actions">
+                    <a href="/login" class="login-link">
+                        ログイン
+                    </a>
+
+                    <a href="/join" class="btn btn-brand">
+                        新規会員登録
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero-section">
+        <div class="container">
+
+            <div class="row align-items-center gy-4">
+
+                <div class="col-lg-7">
+                    <span class="section-kicker">
+                        JAPAN RESTAURANT GUIDE
+                    </span>
+
+                    <h1 class="hero-title">
+                        日本のおいしい店を<br>
+                        <span>見つける。</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        街の定番から、まだ知らない一軒まで。<br>
+                        エリアやジャンルからお店を探せます。
+                    </p>
+                </div>
+
+                <div class="col-lg-5 d-none d-lg-block">
+                    <img class="hero-photo"
+                         src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&amp;fit=crop&amp;w=1100&amp;q=85"
+                         alt="ラーメンの写真">
+                </div>
+
+            </div>
+
+            <!-- Search -->
+            <form class="search-panel" action="/restaurants" method="get">
+
+                <div class="row g-2 align-items-end">
+
+                    <div class="col-12 col-lg-5">
+                        <label class="form-label" for="keyword">
+                            お店検索
+                        </label>
+
+                        <input type="search"
+                               class="form-control"
+                               id="keyword"
+                               name="keyword"
+                               placeholder="店名・キーワードを入力">
+                    </div>
+
+                    <div class="col-6 col-lg-3">
+                        <label class="form-label" for="region">
+                            エリア
+                        </label>
+
+                        <select class="form-select" id="region" name="region">
+                            <option value="">すべてのエリア</option>
+                            <option value="東京">東京</option>
+                            <option value="大阪">大阪</option>
+                            <option value="京都">京都</option>
+                            <option value="福岡">福岡</option>
+                            <option value="札幌">札幌</option>
+                            <option value="名古屋">名古屋</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6 col-lg-2">
+                        <label class="form-label" for="category">
+                            ジャンル
+                        </label>
+
+                        <select class="form-select" id="category" name="category">
+                            <option value="">すべて</option>
+                            <option value="ラーメン">ラーメン</option>
+                            <option value="寿司">寿司</option>
+                            <option value="焼肉">焼肉</option>
+                            <option value="居酒屋">居酒屋</option>
+                            <option value="カフェ">カフェ</option>
+                            <option value="うどん・そば">うどん・そば</option>
+                            <option value="とんかつ">とんかつ</option>
+                            <option value="和食">和食</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-lg-2">
+                        <button class="btn btn-brand search-button"
+                                type="submit">
+                            <i class="bi bi-search me-1"></i>
+                            検索する
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Popular Regions -->
+    <section class="section-space" id="regions">
+        <div class="container">
+
+            <div class="section-heading d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+
+                <div>
+                    <span class="section-kicker">AREA</span>
+                    <h2>エリアから探す</h2>
+                    <p>人気のエリアからお店を探す</p>
+                </div>
+
+                <a class="section-more" href="/restaurants">
+                    すべてのお店を見る
+                    <i class="bi bi-arrow-up-right"></i>
+                </a>
+
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="region-card region-tokyo"
+                       href="/restaurants?region=東京">
+                        <span class="region-label">
+                            東京
+                            <small>東京都</small>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="region-card region-osaka"
+                       href="/restaurants?region=大阪">
+                        <span class="region-label">
+                            大阪
+                            <small>大阪府</small>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="region-card region-kyoto"
+                       href="/restaurants?region=京都">
+                        <span class="region-label">
+                            京都
+                            <small>京都府</small>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="region-card region-fukuoka"
+                       href="/restaurants?region=福岡">
+                        <span class="region-label">
+                            福岡
+                            <small>福岡県</small>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="region-card region-sapporo"
+                       href="/restaurants?region=札幌">
+                        <span class="region-label">
+                            札幌
+                            <small>北海道</small>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a class="region-card region-nagoya"
+                       href="/restaurants?region=名古屋">
+                        <span class="region-label">
+                            名古屋
+                            <small>愛知県</small>
+                        </span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section-space category-section" id="categories">
+        <div class="container">
+
+            <div class="section-heading mb-4">
+                <span class="section-kicker">CATEGORY</span>
+                <h2>ジャンルから探す</h2>
+                <p>料理のジャンルを選んで探す</p>
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=ラーメン">
+                        <span class="category-emoji">🍜</span>
+                        ラーメン
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=寿司">
+                        <span class="category-emoji">🍣</span>
+                        寿司
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=焼肉">
+                        <span class="category-emoji">🥩</span>
+                        焼肉
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=居酒屋">
+                        <span class="category-emoji">🍢</span>
+                        居酒屋
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=カフェ">
+                        <span class="category-emoji">☕</span>
+                        カフェ
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=うどん・そば">
+                        <span class="category-emoji">🍲</span>
+                        うどん・そば
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=とんかつ">
+                        <span class="category-emoji">🍱</span>
+                        とんかつ
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a class="category-card"
+                       href="/restaurants?category=和食">
+                        <span class="category-emoji">🍚</span>
+                        和食
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Recommended Restaurants -->
+    <section class="section-space" id="recommended">
+        <div class="container">
+
+            <div class="section-heading d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
+
+                <div>
+                    <span class="section-kicker">RESTAURANTS</span>
+                    <h2>おすすめのお店</h2>
+                    <p>エリアごとのお店をご紹介します。</p>
+                </div>
+
+                <a class="section-more" href="/restaurants">
+                    もっとお店を見る
+                    <i class="bi bi-arrow-up-right"></i>
+                </a>
+
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Restaurant 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <article class="restaurant-card h-100">
+
+                        <a class="restaurant-img-wrap" href="/restaurants/1">
+                            <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                                 alt="ラーメンの写真">
+                            <span class="category-chip">ラーメン</span>
+                        </a>
+
+                        <div class="restaurant-info">
+                            <div class="restaurant-meta">東京 · 渋谷</div>
+
+                            <h3>
+                                <a href="/restaurants/1">麺屋 はる</a>
+                            </h3>
+
+                            <p>濃厚なスープともちもち麺が魅力のラーメン</p>
+
+                            <div class="restaurant-bottom">
+                                <span class="rating">
+                                    ★ 4.7 <small>(128件)</small>
+                                </span>
+                                <span class="price">¥1,000〜2,000</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+                <!-- Restaurant 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <article class="restaurant-card h-100">
+
+                        <a class="restaurant-img-wrap" href="/restaurants/2">
+                            <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                                 alt="寿司の写真">
+                            <span class="category-chip">寿司</span>
+                        </a>
+
+                        <div class="restaurant-info">
+                            <div class="restaurant-meta">大阪 · 難波</div>
+
+                            <h3>
+                                <a href="/restaurants/2">鮨の道</a>
+                            </h3>
+
+                            <p>新鮮なネタを楽しめるこだわりの寿司</p>
+
+                            <div class="restaurant-bottom">
+                                <span class="rating">
+                                    ★ 4.6 <small>(94件)</small>
+                                </span>
+                                <span class="price">¥3,000〜5,000</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+                <!-- Restaurant 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <article class="restaurant-card h-100">
+
+                        <a class="restaurant-img-wrap" href="/restaurants/3">
+                            <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                                 alt="和食の写真">
+                            <span class="category-chip">和食</span>
+                        </a>
+
+                        <div class="restaurant-info">
+                            <div class="restaurant-meta">京都 · 祇園</div>
+
+                            <h3>
+                                <a href="/restaurants/3">京都ダイニング 花</a>
+                            </h3>
+
+                            <p>京都の四季を味わえる心温まる一皿</p>
+
+                            <div class="restaurant-bottom">
+                                <span class="rating">
+                                    ★ 4.5 <small>(76件)</small>
+                                </span>
+                                <span class="price">¥2,000〜4,000</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+                <!-- Restaurant 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <article class="restaurant-card h-100">
+
+                        <a class="restaurant-img-wrap" href="/restaurants/4">
+                            <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                                 alt="居酒屋の写真">
+                            <span class="category-chip">居酒屋</span>
+                        </a>
+
+                        <div class="restaurant-info">
+                            <div class="restaurant-meta">福岡 · 博多</div>
+
+                            <h3>
+                                <a href="/restaurants/4">博多 よる</a>
+                            </h3>
+
+                            <p>落ち着いた空間で楽しむ夜のひととき</p>
+
+                            <div class="restaurant-bottom">
+                                <span class="rating">
+                                    ★ 4.4 <small>(83件)</small>
+                                </span>
+                                <span class="price">¥2,000〜4,000</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+                <!-- Restaurant 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <article class="restaurant-card h-100">
+
+                        <a class="restaurant-img-wrap" href="/restaurants/5">
+                            <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                                 alt="カフェの写真">
+                            <span class="category-chip">カフェ</span>
+                        </a>
+
+                        <div class="restaurant-info">
+                            <div class="restaurant-meta">札幌 · 大通</div>
+
+                            <h3>
+                                <a href="/restaurants/5">カフェ ゆき</a>
+                            </h3>
+
+                            <p>香り高いコーヒーとスイーツが楽しめるカフェ</p>
+
+                            <div class="restaurant-bottom">
+                                <span class="rating">
+                                    ★ 4.8 <small>(65件)</small>
+                                </span>
+                                <span class="price">¥800〜1,500</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+                <!-- Restaurant 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <article class="restaurant-card h-100">
+
+                        <a class="restaurant-img-wrap" href="/restaurants/6">
+                            <img src="https://images.unsplash.com/photo-1555992336-03a23c7b20ee?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                                 alt="料理の写真">
+                            <span class="category-chip">和食</span>
+                        </a>
+
+                        <div class="restaurant-info">
+                            <div class="restaurant-meta">名古屋 · 栄</div>
+
+                            <h3>
+                                <a href="/restaurants/6">名古屋テーブル</a>
+                            </h3>
+
+                            <p>くつろぎの空間で味わう満足の一皿</p>
+
+                            <div class="restaurant-bottom">
+                                <span class="rating">
+                                    ★ 4.3 <small>(52件)</small>
+                                </span>
+                                <span class="price">¥1,500〜3,000</span>
+                            </div>
+                        </div>
+
+                    </article>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership -->
+    <section class="section-space pt-0">
+        <div class="container">
+
+            <div class="discover-banner d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4">
+
+                <div>
+                    <span class="banner-kicker">MEMBERSHIP</span>
+
+                    <h2>
+                        気になるお店を<br>
+                        お気に入りに保存。
+                    </h2>
+
+                    <p>
+                        行きたいお店を保存したり、
+                        口コミを投稿したりできます。
+                    </p>
+                </div>
+
+                <a href="/join" class="btn btn-light banner-button">
+                    会員登録する
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+
+        <div class="row gy-4 justify-content-between">
+
+            <div class="col-lg-5">
+                <a href="/" class="footer-brand">
+                    food<span>order</span>
+                </a>
+
+                <p>
+                    日本のおいしいお店を見つけ、<br>
+                    食の体験をシェアする場所。
+                </p>
+
+                <small>
+                    本サイトは学習用のチームプロジェクトです。
+                </small>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h3>サービス</h3>
+                <a href="/restaurants">お店を探す</a>
+                <a href="#regions">人気のエリア</a>
+                <a href="#categories">料理のジャンル</a>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h3>アカウント</h3>
+                <a href="/login">ログイン</a>
+                <a href="/join">新規会員登録</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="footer-bottom d-flex justify-content-between flex-wrap gap-2">
+            <span>© 2026 FoodOrder.</span>
+            <span>Spring Boot &amp; Bootstrap 5</span>
+        </div>
+
+    </div>
+</footer>
+
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
