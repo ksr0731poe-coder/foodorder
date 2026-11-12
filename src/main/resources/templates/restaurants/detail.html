@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${restaurant.restaurantName + ' | FoodOrder'}">店舗詳細 | FoodOrder</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/main.css" th:href="@{/main.css}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container py-2">
+        <a class="navbar-brand" href="/" th:href="@{/}"
+           aria-label="FoodOrderのホームへ">
+            <span>food<span class="brand-accent">order</span></span>
+        </a>
+    </div>
+</header>
+<main>
+    <section class="hero-section py-4">
+        <div class="container">
+            <a class="section-more" href="list.html" th:href="@{/restaurants}">
+                ← お店一覧に戻る
+            </a>
+
+            <p class="restaurant-meta mt-3 mb-1"
+               th:if="${not #strings.isEmpty(restaurant.regionNames)}"
+               th:text="${restaurant.regionNames}">大阪 · 難波</p>
+            <h1 class="h2 fw-bold" th:text="${restaurant.restaurantName}">もも寿司</h1>
+            <div class="d-flex flex-wrap align-items-center gap-2 mt-2"
+                 th:with="averageRating=${restaurant.averageRating}, reviewCount=${restaurant.reviewCount}">
+    <span aria-hidden="true">
+        <span th:each="star : ${#numbers.sequence(1, 5)}"
+              th:classappend="${averageRating != null and averageRating >= star - 0.5
+                  ? 'text-warning' : 'text-secondary opacity-50'}">★</span>
+    </span>
+                <span class="fw-bold"
+                      th:text="${averageRating == null ? '評価なし'
+              : #numbers.formatDecimal(averageRating, 1, 2, 'POINT')}">評価なし</span>
+                <span class="text-muted" th:text="|口コミ ${reviewCount}件|">口コミ 0件</span>
+            </div>
+
+            <p class="mt-2 mb-0"
+               th:with="min=${restaurant.budgetMin}, max=${restaurant.budgetMax}">
+                <strong>予算</strong>
+                <span th:if="${min != null}"
+                      th:text="|¥${#numbers.formatInteger(min, 1, 'COMMA')}|"></span>
+                <span th:if="${min != null or max != null}">〜</span>
+                <span th:if="${max != null}"
+                      th:text="|¥${#numbers.formatInteger(max, 1, 'COMMA')}|"></span>
+                <span th:if="${min == null and max == null}">未登録</span>
+            </p>
+            <nav class="restaurant-detail-nav mt-3"
+                 aria-label="店舗詳細のページ内ナビゲーション">
+                <a href="#restaurant-overview">概要</a>
+                <a href="#restaurant-menu-title">メニュー</a>
+                <a href="#restaurant-review-photos">口コミ写真</a>
+                <a href="#restaurant-reviews">口コミ・評価</a>
+                <a href="#restaurant-map">地図</a>
+            </nav>
+        </div>
+    </section>
+
+    <div class="container py-4">
+        <div id="restaurant-overview" class="row g-4">
+            <div class="col-lg-5">
+                <div class="restaurant-card">
+                    <div class="restaurant-img-wrap d-flex align-items-center justify-content-center"
+                         style="background-color: var(--soft);">
+                        <!--/*/
+                        <img th:if="${not #strings.isEmpty(restaurant.imagePath)}"
+                             th:src="${restaurant.imagePath}"
+                             th:alt="${restaurant.restaurantName + 'の写真'}">
+                        /*/-->
+                        <span class="text-muted small"
+                              th:if="${#strings.isEmpty(restaurant.imagePath)}">
+                            写真は準備中です
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <section class="restaurant-card p-4">
+                    <h2 class="h5 fw-bold mb-3">店舗情報</h2>
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">住所</dt>
+                        <dd class="col-sm-8" th:text="${restaurant.address}"></dd>
+
+                        <dt class="col-sm-4">営業時間</dt>
+                        <dd class="col-sm-8"
+                            th:text="${#strings.defaultString(restaurant.businessHours, '未登録')}">
+                            11:30～14:30 / 17:00～22:00
+                        </dd>
+
+                        <dt class="col-sm-4">定休日</dt>
+                        <dd class="col-sm-8"
+                            th:text="${#strings.defaultString(restaurant.closedDays, '未登録')}">
+                            毎週月曜日
+                        </dd>
+
+                    </dl>
+
+                    <hr>
+
+                    <h2 class="h5 fw-bold">お店の紹介</h2>
+                    <p class="mb-0"
+                       th:text="${#strings.defaultString(restaurant.description, '紹介文は準備中です')}">
+                        旬の魚介を使った握り寿司と海鮮料理を楽しめる寿司店です。
+                    </p>
+                </section>
+            </div>
+        </div>
+        <section class="restaurant-card p-4 mt-4" aria-labelledby="restaurant-menu-title">
+            <h2 id="restaurant-menu-title" class="h5 fw-bold mb-3">メニュー</h2>
+
+            <!--/*/
+            <p class="text-muted mb-0" th:if="${menuItems == null or #lists.isEmpty(menuItems)}">
+                メニューは準備中です
+            </p>
+            /*/-->
+
+            <ul class="list-group list-group-flush"
+                th:if="${menuItems != null and not #lists.isEmpty(menuItems)}">
+                <li class="list-group-item d-flex justify-content-between align-items-baseline gap-3 px-0"
+                    th:each="item : ${menuItems}">
+                    <span th:text="${item.menuName}">握り寿司盛り合わせ</span>
+                    <span class="fw-semibold text-nowrap"
+                          th:text="${item.price == null ? '価格未登録' : '¥' + #numbers.formatInteger(item.price, 1, 'COMMA')}">
+                        ¥1,500
+                    </span>
+                </li>
+            </ul>
+        </section>
+        <section class="restaurant-card p-4 mt-4" aria-labelledby="restaurant-review-photos">
+            <h2 id="restaurant-review-photos" class="h5 fw-bold mb-3">口コミ写真</h2>
+            <p class="text-muted mb-0">口コミ写真は準備中です</p>
+        </section>
+
+        <section class="restaurant-card p-4 mt-4" aria-labelledby="restaurant-reviews">
+            <h2 id="restaurant-reviews" class="h5 fw-bold mb-3">口コミ・評価</h2>
+            <p class="text-muted mb-0">口コミは準備中です</p>
+        </section>
+        <section class="restaurant-card p-4 mt-4" aria-labelledby="restaurant-map"
+                 th:with="mapUrls=${({
+             '東京 · 渋谷': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.8386504167484!2d139.69301967575504!3d35.65634673134051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188b55c33c2ac9%3A0x731d82b57ac39a9!2z6Iul6JGJ44OT44Or!5e0!3m2!1sko!2skr!4v1794384687483!5m2!1sko!2skr',
+             '東京 · 新宿': 'https://maps.google.com/maps?q=%E6%9D%B1%E4%BA%AC%E9%83%BD%E6%96%B0%E5%AE%BF%E5%8C%BA&amp;output=embed&amp;z=14&amp;hl=ja',
+             '大阪 · 難波': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3281.567972668775!2d135.5000923!3d34.665612100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e76cc9c97339%3A0x538e516129f4166a!2zTmFtYmEsIOyjvOyYpOq1rCDsmKTsgqzsubTsi5wg7Jik7IKs7Lm067aAIDU0Mi0wMDc2IOydvOuzuA!5e0!3m2!1sko!2skr!4v1794383805156!5m2!1sko!2skr'
+         })},
+         mapRegion=${#strings.isEmpty(restaurant.regionNames) ? null
+             : #strings.arraySplit(restaurant.regionNames, '、').^[!#strings.isEmpty(#root.mapUrls.get(#this))]},
+         mapUrl=${mapRegion == null ? null : mapUrls.get(mapRegion)}">
+            <h2 id="restaurant-map" class="h5 fw-bold mb-3">地図</h2>
+
+            <iframe th:if="${not #strings.isEmpty(mapUrl)}"
+                    th:src="${mapUrl}"
+                    th:title="|${restaurant.restaurantName}の地図|"
+                    class="w-100 rounded border"
+                    height="400"
+                    loading="lazy"
+                    allowfullscreen></iframe>
+
+            <p th:if="${#strings.isEmpty(mapUrl)}" class="text-muted">
+                地図は準備中です
+            </p>
+
+            <p class="mb-0 mt-2">
+                <strong>住所</strong>
+                <span th:text="${restaurant.address}"></span>
+            </p>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>
