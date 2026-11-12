@@ -1,4 +1,4 @@
-package com.foodorder.security;
+package com.foodorder.config;
 
 import com.foodorder.dto.LoginMemberRow;
 import com.foodorder.mapper.LoginMapper;

@@ -2,7 +2,6 @@ package com.foodorder.config;
 
 import com.foodorder.security.GoogleAuthorizationRequestRepository;
 import com.foodorder.security.GoogleOidcUserService;
-import com.foodorder.security.LoginAuthenticationProvider;
 import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
