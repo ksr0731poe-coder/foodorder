@@ -231,6 +231,46 @@ a:hover {
     color: var(--brand-dark);
 }
 
+.restaurant-detail-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border: 1px solid var(--line);
+    border-bottom: 2px solid var(--brand-dark);
+    background: var(--soft);
+}
+
+.restaurant-detail-nav a {
+    padding: 12px 8px;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.restaurant-detail-nav a + a {
+    border-left: 1px solid var(--line);
+}
+
+.restaurant-detail-nav a:hover {
+    color: var(--brand-dark);
+}
+
+.restaurant-detail-nav a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -4px;
+}
+
+main:not(:has(:target)) .restaurant-detail-nav a[href="#restaurant-overview"],
+main:has(#restaurant-overview:target) .restaurant-detail-nav a[href="#restaurant-overview"],
+main:has(#restaurant-menu-title:target) .restaurant-detail-nav a[href="#restaurant-menu-title"],
+main:has(#restaurant-review-photos:target) .restaurant-detail-nav a[href="#restaurant-review-photos"],
+main:has(#restaurant-reviews:target) .restaurant-detail-nav a[href="#restaurant-reviews"],
+main:has(#restaurant-map:target) .restaurant-detail-nav a[href="#restaurant-map"] {
+    background: var(--brand-dark);
+    color: #fff;
+}
+
+
 /* =========================
    Popular Regions
 ========================= */

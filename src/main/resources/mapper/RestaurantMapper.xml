@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.foodorder.mapper.RestaurantMapper">
+
+    <select id="search" resultType="com.foodorder.dto.RestaurantListDto">
+        <if test="region != null and region != ''">
+            WITH RECURSIVE selected_regions AS (
+            SELECT region_id
+            FROM regions
+            WHERE region_name = #{region}
+            AND parent_region_id IS NULL
+
+            UNION DISTINCT
+
+            SELECT child.region_id
+            FROM regions AS child
+            JOIN selected_regions AS parent
+            ON child.parent_region_id = parent.region_id
+            )
+        </if>
+
+        SELECT
+        r.restaurant_id AS restaurantId,
+        r.restaurant_name AS restaurantName,
+        r.description,
+        (
+        SELECT GROUP_CONCAT(
+        CONCAT_WS(' · ', parent.region_name, rg.region_name)
+        ORDER BY rg.sort_order, rg.region_id SEPARATOR '、'
+        )
+        FROM restaurant_regions AS rr
+        JOIN regions AS rg ON rg.region_id = rr.region_id
+        LEFT JOIN regions AS parent ON parent.region_id = rg.parent_region_id
+        WHERE rr.restaurant_id = r.restaurant_id
+        ) AS regionNames,
+        (
+        SELECT GROUP_CONCAT(
+        c.category_name
+        ORDER BY c.sort_order, c.category_id SEPARATOR '、'
+        )
+        FROM restaurant_categories AS rc
+        JOIN categories AS c ON c.category_id = rc.category_id
+        WHERE rc.restaurant_id = r.restaurant_id
+        ) AS categoryNames,
+        (
+        SELECT ri.image_path
+        FROM restaurant_images AS ri
+        WHERE ri.restaurant_id = r.restaurant_id
+        ORDER BY ri.sort_order ASC, ri.image_id ASC
+        LIMIT 1
+        ) AS imagePath
+        FROM restaurants AS r
+        WHERE r.status = 'PUBLIC'
+
+        <if test="keyword != null and keyword.trim() != ''">
+            AND LOCATE(TRIM(#{keyword}), r.restaurant_name) > 0
+        </if>
+
+        <if test="region != null and region != ''">
+            AND EXISTS (
+            SELECT 1
+            FROM restaurant_regions AS rr
+            JOIN selected_regions AS sr ON sr.region_id = rr.region_id
+            WHERE rr.restaurant_id = r.restaurant_id
+            )
+        </if>
+
+        <if test="category != null and category != ''">
+            AND EXISTS (
+            SELECT 1
+            FROM restaurant_categories AS rc
+            JOIN categories AS c ON c.category_id = rc.category_id
+            WHERE rc.restaurant_id = r.restaurant_id
+            AND (
+            c.category_name = #{category}
+            OR (#{category} = '和食' AND c.category_code = 'JAPANESE')
+            )
+            )
+        </if>
+
+        ORDER BY r.created_at DESC, r.restaurant_id DESC
+    </select>
+    <select id="findDetailById" resultType="com.foodorder.dto.RestaurantDetailDto">
+        SELECT
+        r.restaurant_id AS restaurantId,
+        r.restaurant_name AS restaurantName,
+        r.address,
+        r.business_hours AS businessHours,
+        r.closed_days AS closedDays,
+        r.budget_min AS budgetMin,
+        r.budget_max AS budgetMax,
+        r.description,
+        (
+        SELECT AVG(rv.rating)
+        FROM reviews AS rv
+        WHERE rv.restaurant_id = r.restaurant_id
+        ) AS averageRating,
+        (
+        SELECT COUNT(*)
+        FROM reviews AS rv
+        WHERE rv.restaurant_id = r.restaurant_id
+        ) AS reviewCount,
+        (
+        SELECT GROUP_CONCAT(
+        CONCAT_WS(' · ', parent.region_name, rg.region_name)
+        ORDER BY rg.sort_order, rg.region_id SEPARATOR '、'
+        )
+        FROM restaurant_regions AS rr
+        JOIN regions AS rg ON rg.region_id = rr.region_id
+        LEFT JOIN regions AS parent ON parent.region_id = rg.parent_region_id
+        WHERE rr.restaurant_id = r.restaurant_id
+        ) AS regionNames,
+        (
+        SELECT GROUP_CONCAT(
+        c.category_name
+        ORDER BY c.sort_order, c.category_id SEPARATOR '、'
+        )
+        FROM restaurant_categories AS rc
+        JOIN categories AS c ON c.category_id = rc.category_id
+        WHERE rc.restaurant_id = r.restaurant_id
+        ) AS categoryNames,
+        (
+        SELECT ri.image_path
+        FROM restaurant_images AS ri
+        WHERE ri.restaurant_id = r.restaurant_id
+        ORDER BY ri.sort_order, ri.image_id
+        LIMIT 1
+        ) AS imagePath
+        FROM restaurants AS r
+        WHERE r.restaurant_id = #{restaurantId}
+        AND r.status = 'PUBLIC'
+    </select>
+    <select id="findMenuItemsByRestaurantId" resultType="com.foodorder.dto.RestaurantMenuDto">
+        SELECT
+        m.menu_name AS menuName,
+        m.price
+        FROM restaurant_menus AS m
+        WHERE m.restaurant_id = #{restaurantId}
+        ORDER BY m.sort_order ASC, m.menu_id ASC
+    </select>
+
+</mapper>

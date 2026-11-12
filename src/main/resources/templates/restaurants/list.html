@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お店を探す | FoodOrder</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../../static/main.css" th:href="@{/main.css}">
+</head>
+<body>
+
+<header class="site-header">
+    <nav class="navbar">
+        <div class="container py-2">
+            <a class="navbar-brand" href="../index.html" th:href="@{/}">
+                <span class="brand-icon">
+                    <i class="bi bi-egg-fried" aria-hidden="true"></i>
+                </span>
+                <span>food<span class="brand-accent">order</span></span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="hero-section py-4">
+        <div class="container">
+            <h1 class="h2 fw-bold">お店を探す</h1>
+            <p class="mb-0">店名、エリア、料理のジャンルからお店を探せます。</p>
+
+            <form class="search-panel mt-3"
+                  action="/restaurants" th:action="@{/restaurants}" method="get"
+                  role="search">
+                <div class="row g-2 align-items-end">
+                    <div class="col-12 col-lg-5">
+                        <label class="form-label" for="keyword">お店検索</label>
+                        <input class="form-control" type="search" id="keyword" name="keyword"
+                               th:value="${keyword}" placeholder="店名・キーワードを入力">
+                    </div>
+
+                    <div class="col-6 col-lg-3">
+                        <label class="form-label" for="region">エリア</label>
+                        <select class="form-select" id="region" name="region">
+                            <option value="" th:selected="${region == ''}">すべてのエリア</option>
+                            <option value="東京" th:selected="${region == '東京'}">東京</option>
+                            <option value="大阪" th:selected="${region == '大阪'}">大阪</option>
+                            <option value="京都" th:selected="${region == '京都'}">京都</option>
+                            <option value="福岡" th:selected="${region == '福岡'}">福岡</option>
+                            <option value="札幌" th:selected="${region == '札幌'}">札幌</option>
+                            <option value="名古屋" th:selected="${region == '名古屋'}">名古屋</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6 col-lg-2">
+                        <label class="form-label" for="category">ジャンル</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="" th:selected="${category == ''}">すべて</option>
+                            <option value="ラーメン" th:selected="${category == 'ラーメン'}">ラーメン</option>
+                            <option value="寿司" th:selected="${category == '寿司'}">寿司</option>
+                            <option value="焼肉" th:selected="${category == '焼肉'}">焼肉</option>
+                            <option value="居酒屋" th:selected="${category == '居酒屋'}">居酒屋</option>
+                            <option value="カフェ" th:selected="${category == 'カフェ'}">カフェ</option>
+                            <option value="うどん・そば" th:selected="${category == 'うどん・そば'}">うどん・そば</option>
+                            <option value="とんかつ" th:selected="${category == 'とんかつ'}">とんかつ</option>
+                            <option value="和食" th:selected="${category == '和食'}">和食</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-lg-2">
+                        <button class="btn btn-brand search-button" type="submit">
+                            <i class="bi bi-search me-1" aria-hidden="true"></i>
+                            検索する
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="container py-4">
+        <div class="section-heading mb-3">
+            <h2>お店一覧</h2>
+        </div>
+
+        <p class="text-muted" th:if="${#lists.isEmpty(restaurants)}">
+            条件に一致するお店が見つかりませんでした。
+        </p>
+
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-4" th:each="restaurant : ${restaurants}">
+                <article class="restaurant-card h-100 position-relative">
+                    <div class="restaurant-img-wrap d-flex align-items-center justify-content-center"
+                         style="background-color: var(--soft);">
+                        <img th:if="${not #strings.isEmpty(restaurant.imagePath)}"
+                             th:src="${restaurant.imagePath}"
+                             th:alt="${restaurant.restaurantName + 'の写真'}">
+
+                        <span class="text-muted small" th:if="${#strings.isEmpty(restaurant.imagePath)}">
+    写真は準備中です
+</span>
+                        <span class="category-chip"
+                              th:if="${not #strings.isEmpty(restaurant.categoryNames)}"
+                              th:text="${restaurant.categoryNames}"></span>
+                    </div>
+
+                    <div class="restaurant-info">
+                        <div class="restaurant-meta"
+                             th:if="${not #strings.isEmpty(restaurant.regionNames)}"
+                             th:text="${restaurant.regionNames}"></div>
+                        <h3>
+                            <a class="stretched-link"
+                               th:href="@{/restaurants/{restaurantId}(restaurantId=${restaurant.restaurantId})}"
+                               th:text="${restaurant.restaurantName}"></a>
+                        </h3>
+                        <p class="mb-0"
+                           th:if="${not #strings.isEmpty(restaurant.description)}"
+                           th:text="${restaurant.description}"></p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

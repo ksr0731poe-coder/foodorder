@@ -7,10 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
+
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
-        model.addAttribute("googleMessage", session.getAttribute("googleMessage"));
+        model.addAttribute(
+                "googleMessage",
+                session.getAttribute("googleMessage")
+        );
         session.removeAttribute("googleMessage");
+
         return "index";
     }
 }
