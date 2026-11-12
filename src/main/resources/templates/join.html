@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>会員登録 | Food Order</title>
+
+    <!-- 기존 공용 CSS는 수정하지 않고 불러오기만 함 -->
+    <link rel="stylesheet" th:href="@{/main.css}">
+
+    <!-- 계정 화면 전용 CSS -->
+    <link rel="stylesheet" th:href="@{/auth.css}">
+</head>
+
+<body class="auth-page">
+
+<header class="auth-header">
+    <div class="auth-header-inner">
+        <a class="auth-logo" th:href="@{/}" aria-label="Food Order ホーム">
+            <span class="auth-logo-mark" aria-hidden="true">F</span>
+            <span>food <span class="auth-logo-accent">order</span></span>
+        </a>
+
+        <a class="auth-header-link" th:href="@{/}">
+            ホームに戻る
+            <span aria-hidden="true">↗</span>
+        </a>
+    </div>
+</header>
+
+<main class="auth-container">
+
+    <div class="auth-page-heading">
+        <p class="auth-eyebrow">FOOD ORDER ACCOUNT</p>
+        <h1>会員登録</h1>
+        <p class="auth-lead">
+            ご利用に合わせて、会員種別をお選びください。
+        </p>
+    </div>
+
+    <div class="auth-layout">
+
+        <!-- 가입 유형 선택 -->
+        <nav class="auth-type-nav" aria-label="会員種別">
+            <a th:each="t : ${types}"
+               th:href="@{/join(type=${t})}"
+               th:text="${labels.get(t)}"
+               th:classappend="${type == t} ? 'is-active' : ''"
+               th:attr="aria-current=${type == t ? 'page' : null}">
+                一般会員
+            </a>
+        </nav>
+
+        <section class="auth-card">
+
+            <p class="auth-step">STEP 01 / 会員種別の選択</p>
+
+            <h2 th:text="${labels.get(type)}">一般会員</h2>
+
+            <!-- 개인회원 안내 -->
+            <div th:if="${type == 'USER'}">
+                <p class="auth-description">
+                    お気に入りのお店を見つけて、
+                    Food Orderをもっと便利にご利用いただけます。
+                </p>
+
+                <div class="auth-info-box">
+                    <h3>一般のお客様はこちら</h3>
+                    <p>
+                        ログインID、ニックネーム、メールアドレス、
+                        パスワードを登録します。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 가게관리자 안내 -->
+            <div th:if="${type == 'OWNER'}">
+                <p class="auth-description">
+                    店舗管理者として登録される方はこちらからお進みください。
+                </p>
+
+                <div class="auth-info-box">
+                    <h3>店舗を運営されている方へ</h3>
+                    <p>
+                        会員情報に加えて、事業者情報を登録します。
+                        登録完了後に、ログイン用の店舗管理番号が発行されます。
+                    </p>
+                </div>
+
+                <p class="auth-help">
+                    ※ 会員登録のみでは、既存店舗の管理権限は付与されません。
+                </p>
+            </div>
+
+            <a class="auth-primary"
+               th:href="@{/join/form(type=${type})}">
+                この会員種別で登録する
+                <span aria-hidden="true">→</span>
+            </a>
+
+            <div class="auth-card-bottom">
+                <span>すでにアカウントをお持ちですか？</span>
+                <a th:href="@{/login}">ログイン</a>
+            </div>
+
+        </section>
+    </div>
+
+</main>
+
+<footer class="auth-footer">
+    <p>日本のおいしいお店を、もっと身近に。</p>
+    <small>© Food Order</small>
+</footer>
+
+</body>
+</html>

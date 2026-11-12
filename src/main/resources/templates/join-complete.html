@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>会員登録完了 | Food Order</title>
+
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/auth.css}">
+</head>
+
+<body class="auth-page">
+
+<header class="auth-header">
+    <div class="auth-header-inner">
+        <a class="auth-logo" th:href="@{/}" aria-label="Food Order ホーム">
+            <span class="auth-logo-mark" aria-hidden="true">F</span>
+            <span>food <span class="auth-logo-accent">order</span></span>
+        </a>
+
+        <a class="auth-header-link" th:href="@{/}">
+            ホームに戻る
+            <span aria-hidden="true">↗</span>
+        </a>
+    </div>
+</header>
+
+<main class="auth-container auth-complete-container">
+
+    <section class="auth-card auth-complete-card">
+
+        <div class="auth-complete-icon" aria-hidden="true">✓</div>
+
+        <p class="auth-eyebrow">REGISTRATION COMPLETE</p>
+
+        <h1>会員登録が完了しました</h1>
+
+        <p class="auth-lead">
+            Food Orderへようこそ。<br>
+            ご登録いただきありがとうございます。
+        </p>
+
+        <div class="auth-number-box"
+             th:if="${memberType == 'OWNER' and accessNumber != null}">
+
+            <p class="auth-number-label">店舗管理番号</p>
+
+            <strong class="auth-access-number"
+                    th:text="${accessNumber}">
+                000000000000
+            </strong>
+
+            <p>
+                この番号は、ログインID・パスワードとともに
+                ログイン時に必要です。
+            </p>
+
+            <p class="auth-help"
+               th:if="${memberType == 'ADMIN'}">
+                ※ ログインには、登録時の招待コードではなく、
+                上記の管理者番号を使用してください。
+            </p>
+        </div>
+
+        <p class="auth-help"
+           th:if="${memberType == 'ADMIN'}">
+            ※ ログインには、登録時の招待コードではなく、
+            上記の管理者番号を使用してください。
+        </p>
+
+        <p class="auth-description"
+           th:if="${memberType == 'USER'}">
+            登録したログインIDまたはメールアドレスと、
+            パスワードでログインしてください。
+        </p>
+
+        <a class="auth-primary"
+           th:href="@{/login(type=${memberType})}">
+            ログインへ進む
+            <span aria-hidden="true">→</span>
+        </a>
+
+        <a class="auth-back-link" th:href="@{/}">
+            ホームに戻る
+        </a>
+
+    </section>
+
+</main>
+
+<footer class="auth-footer">
+    <p>日本のおいしいお店を、もっと身近に。</p>
+    <small>© Food Order</small>
+</footer>
+
+</body>
+</html>

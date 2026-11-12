@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${mode == 'id' ? 'ログインIDを探す | Food Order' : 'パスワード再設定 | Food Order'}">アカウント | Food Order</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/auth.css}">
+    <script defer th:src="@{/auth.js}"></script>
+</head>
+<body class="auth-page auth-login-page">
+<header class="auth-header">
+    <div class="auth-header-inner">
+        <a class="auth-logo" th:href="@{/}"><span class="auth-logo-mark" aria-hidden="true">F</span><span>food <span class="auth-logo-accent">order</span></span></a>
+        <a class="auth-header-link" th:href="@{/}">ホームに戻る <span aria-hidden="true">↗</span></a>
+    </div>
+</header>
+<main class="auth-container">
+    <div class="auth-page-heading">
+        <p class="auth-eyebrow">FOOD ORDER ACCOUNT</p>
+        <h1 th:text="${mode == 'id' ? 'ログインIDを探す' : 'パスワード再設定'}">アカウント</h1>
+        <p class="auth-lead" th:text="${mode == 'id' ? '登録済みのメールアドレスで、ログインIDを確認できます。' : 'メール認証後、新しいパスワードを設定してください。'}"></p>
+    </div>
+    <section class="auth-card">
+        <nav class="auth-login-tabs" aria-label="アカウントの確認方法">
+            <a th:href="@{/account/recovery(mode='id',type=${type})}" th:classappend="${mode == 'id' ? 'is-active' : ''}">ログインIDを探す</a>
+            <a th:href="@{/account/recovery(mode='password',type=${type})}" th:classappend="${mode == 'password' ? 'is-active' : ''}">パスワード再設定</a>
+        </nav>
+        <p class="auth-alert auth-alert-error" role="alert" th:if="${error}" th:text="${error}"></p>
+        <p class="auth-alert" role="status" th:if="${message}" th:text="${message}"></p>
+
+        <form th:if="${mode == 'id' or !canReset}"
+              th:action="${mode == 'id'} ? @{/account/recovery/id} : @{/account/recovery/send}" method="post" data-auth-submit>
+            <div class="auth-field">
+                <label for="recovery-type">会員種別</label>
+                <select id="recovery-type" name="type" required>
+                    <option value="USER" th:selected="${type == 'USER'}">一般会員</option>
+                    <option value="OWNER" th:selected="${type == 'OWNER'}">店舗管理者</option>
+                </select>
+            </div>
+            <div class="auth-field">
+                <label for="recovery-email">登録済みメールアドレス <span class="auth-required">必須</span></label>
+                <input id="recovery-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="example@mail.com" required>
+            </div>
+            <button class="auth-primary" type="submit" th:text="${mode == 'id' ? 'ログインIDを確認する' : '認証コードを送信'}"></button>
+            <p class="auth-help" th:if="${mode == 'id'}">メール認証は不要です。</p>
+        </form>
+
+        <div th:if="${mode == 'id' and foundId != null}" class="auth-number-box" role="status">
+            <p class="auth-number-label">ご登録のログインID</p>
+            <strong class="auth-access-number" th:text="${foundId}"></strong>
+        </div>
+
+        <form th:if="${mode == 'password' and codeSent and !canReset}" th:action="@{/account/recovery/verify}" method="post" class="auth-code-form" data-auth-submit>
+            <input type="hidden" name="type" th:value="${type}">
+            <div class="auth-field">
+                <label for="recovery-code">認証コード <span class="auth-required">必須</span></label>
+                <input id="recovery-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="6桁の認証コード" required autofocus>
+            </div>
+            <button class="auth-primary" type="submit">認証してパスワード再設定へ</button>
+            <p class="auth-help">再送信は60秒後に可能です。再送信すると、以前のコードは無効になります。</p>
+        </form>
+
+        <form th:if="${mode == 'password' and canReset}" th:action="@{/account/recovery/reset}" method="post" data-auth-submit>
+            <input type="hidden" name="type" th:value="${type}">
+            <p class="auth-help">メール認証が完了しました。30分以内に新しいパスワードを設定してください。</p>
+            <div class="auth-field">
+                <label for="reset-password">新しいパスワード <span class="auth-required">必須</span></label>
+                <div class="auth-password">
+                    <input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="64" required autofocus aria-describedby="reset-help">
+                    <button class="auth-password-toggle" type="button" data-toggle-password="reset-password" aria-controls="reset-password" aria-label="パスワードを表示" aria-pressed="false">表示</button>
+                </div>
+                <p id="reset-help" class="auth-help">英字と数字を含む8〜64文字、UTF-8で72バイト以内で入力してください。</p>
+            </div>
+            <div class="auth-field">
+                <label for="reset-password-confirm">新しいパスワード（確認） <span class="auth-required">必須</span></label>
+                <div class="auth-password">
+                    <input id="reset-password-confirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="8" maxlength="64" required>
+                    <button class="auth-password-toggle" type="button" data-toggle-password="reset-password-confirm" aria-controls="reset-password-confirm" aria-label="確認用パスワードを表示" aria-pressed="false">表示</button>
+                </div>
+            </div>
+            <button class="auth-primary" type="submit">パスワードを変更する</button>
+        </form>
+        <div class="auth-card-bottom"><a th:href="@{/login(type=${type})}">ログインに戻る</a></div>
+    </section>
+</main>
+<footer class="auth-footer"><p>日本のおいしいお店を、もっと身近に。</p><small>© Food Order</small></footer>
+</body>
+</html>
