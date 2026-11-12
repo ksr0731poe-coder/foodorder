@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,11 +67,14 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-3 header-actions">
-                    <a href="/login" class="login-link">
+                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit" class="btn btn-brand">ログアウト</button>
+                    </form>
+                    <a sec:authorize="isAnonymous()" href="/login" class="login-link">
                         ログイン
                     </a>
 
-                    <a href="/join" class="btn btn-brand">
+                    <a sec:authorize="isAnonymous()" href="/join" class="btn btn-brand">
                         新規会員登録
                         <i class="bi bi-arrow-right ms-1"></i>
                     </a>
@@ -83,6 +86,7 @@
 </header>
 
 <main>
+    <div th:if="${googleMessage}" class="container pt-3" role="status"><p class="alert alert-info" th:text="${googleMessage}"></p></div>
 
     <!-- Hero -->
     <section class="hero-section">
@@ -579,7 +583,7 @@
                     </p>
                 </div>
 
-                <a href="/join" class="btn btn-light banner-button">
+                <a sec:authorize="isAnonymous()" href="/join" class="btn btn-light banner-button">
                     会員登録する
                     <i class="bi bi-arrow-right ms-2"></i>
                 </a>
@@ -621,8 +625,14 @@
 
             <div class="col-6 col-lg-2">
                 <h3>アカウント</h3>
-                <a href="/login">ログイン</a>
-                <a href="/join">新規会員登録</a>
+                <form sec:authorize="hasRole('USER')" th:action="@{/account/social/link/google}" method="post" class="mb-3">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">Googleアカウントを連携</button>
+                </form>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit" class="btn btn-brand">ログアウト</button>
+                    </form>
+                <a sec:authorize="isAnonymous()" href="/login">ログイン</a>
+                <a sec:authorize="isAnonymous()" href="/join">新規会員登録</a>
             </div>
 
         </div>

@@ -19,6 +19,12 @@ repositories {
 }
 
 dependencies {
+    // 이메일 인증 코드 발송
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // 아래 기존 의존성들도 그대로 유지하세요.
+    // Spring Boot 4용 Google 소셜 로그인 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'

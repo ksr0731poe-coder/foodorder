@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ログイン | Food Order</title>
+
+    <!-- 기존 공용 CSS는 수정하지 않고 재사용 -->
+    <link rel="stylesheet" th:href="@{/main.css}">
+    <link rel="stylesheet" th:href="@{/auth.css}">
+
+    <!-- 비밀번호 표시·중복 제출 방지 -->
+    <script defer th:src="@{/auth.js}"></script>
+    <script defer th:src="@{/js/login-autofill.js}"></script>
+</head>
+
+<body class="auth-page auth-login-page">
+
+<header class="auth-header">
+    <div class="auth-header-inner">
+
+        <a class="auth-logo"
+           th:href="@{/}"
+           aria-label="Food Order ホーム">
+            <span class="auth-logo-mark" aria-hidden="true">F</span>
+            <span>
+                food <span class="auth-logo-accent">order</span>
+            </span>
+        </a>
+
+        <a class="auth-header-link" th:href="@{/}">
+            ホームに戻る
+            <span aria-hidden="true">↗</span>
+        </a>
+
+    </div>
+</header>
+
+<main class="auth-container">
+
+    <div class="auth-page-heading">
+        <p class="auth-eyebrow">FOOD ORDER ACCOUNT</p>
+
+        <h1>ログイン</h1>
+
+        <p class="auth-lead">
+            会員種別を選択し、ログイン情報をご入力ください。
+        </p>
+    </div>
+
+    <section class="auth-card">
+
+        <!-- 일반회원·가게관리자 선택 -->
+        <nav class="auth-login-tabs"
+             aria-label="ログインする会員種別">
+
+            <a th:each="t : ${types}"
+               th:href="@{/login(type=${t})}"
+               th:text="${labels.get(t)}"
+               th:classappend="${type == t} ? 'is-active' : ''"
+               th:attr="aria-current=${type == t ? 'page' : null}">
+                一般会員
+            </a>
+
+        </nav>
+
+        <h2 th:text="${labels.get(type) + 'ログイン'}">
+            一般会員ログイン
+        </h2>
+
+        <!-- 일반 로그인 오류 -->
+        <div class="auth-message"
+             role="alert"
+             th:if="${param.error != null}">
+            ログインできませんでした。
+            会員種別、ログイン情報、アカウントの状態をご確認ください。
+        </div>
+
+        <!-- 로그아웃 안내 -->
+        <div class="auth-message"
+             role="status"
+             th:if="${param.logout != null}">
+            ログアウトしました。
+        </div>
+
+        <!-- Google 로그인·연결 오류 -->
+        <div class="auth-message"
+             role="alert"
+             th:if="${googleMessage != null}"
+             th:text="${googleMessage}">
+        </div>
+
+        <!-- 기존 아이디·비밀번호 로그인 -->
+        <form th:action="@{/login}"
+              method="post"
+              autocomplete="on"
+              data-login-form
+              th:data-success-url="@{/}"
+              data-auth-submit>
+
+            <input type="hidden"
+                   name="memberType"
+                   th:value="${type}">
+
+            <!-- 가게관리자 번호 -->
+            <div class="auth-field"
+                 th:if="${type == 'OWNER'}">
+
+                <label for="accessNumber">
+                    店舗管理番号
+                    <span class="auth-required">必須</span>
+                </label>
+
+                <input id="accessNumber"
+                       name="accessNumber"
+                       type="text"
+                       inputmode="numeric"
+                       autocomplete="off"
+                       pattern="[0-9]{12}"
+                       minlength="12"
+                       maxlength="12"
+                       placeholder="12桁の数字"
+                       title="半角数字12桁で入力してください。"
+                       required>
+
+                <p class="auth-help">
+                    会員登録完了時に発行された店舗管理番号を入力してください。
+                </p>
+
+            </div>
+
+            <div class="auth-field">
+
+                <label for="username">
+                    <span th:text="${type == 'USER'
+                                    ? 'ログインIDまたはメールアドレス'
+                                    : 'ログインID'}">
+                        ログインID
+                    </span>
+
+                    <span class="auth-required">必須</span>
+                </label>
+
+                <input id="username"
+                       name="username"
+                       type="text"
+                       autocomplete="username"
+                       th:maxlength="${type == 'USER' ? 254 : 50}"
+                       th:placeholder="${type == 'USER'
+                           ? 'ログインIDまたは登録済みメールアドレス'
+                           : 'ログインID'}"
+                       required>
+
+            </div>
+
+            <div class="auth-field">
+
+                <label for="login-password">
+                    パスワード
+                    <span class="auth-required">必須</span>
+                </label>
+
+                <div class="auth-password">
+
+                    <input id="login-password"
+                           name="password"
+                           type="password"
+                           autocomplete="current-password"
+                           maxlength="64"
+                           placeholder="パスワードを入力"
+                           required>
+
+                    <button class="auth-password-toggle"
+                            type="button"
+                            data-toggle-password="login-password"
+                            aria-controls="login-password"
+                            aria-label="パスワードを表示"
+                            aria-pressed="false">
+                        表示
+                    </button>
+
+                </div>
+
+            </div>
+
+            <label class="auth-remember">
+                <input type="checkbox" id="save-login" name="saveLogin" value="true" aria-describedby="remember-help">
+                <span>ログイン情報を保存</span>
+            </label>
+            <p id="remember-help" class="auth-help">ログアウト後もID・店舗管理番号を自動入力します。パスワードはブラウザの保存・自動入力を許可してください。</p>
+
+            <p class="auth-message" data-login-message role="status" hidden></p>
+
+            <button class="auth-primary"
+                    type="submit">
+                ログイン
+                <span aria-hidden="true">→</span>
+            </button>
+
+        </form>
+
+        <div class="auth-recovery-links">
+            <a th:href="@{/account/recovery(mode='id',type=${type})}">ログインIDをお忘れの方</a>
+            <a th:href="@{/account/recovery(mode='password',type=${type})}">パスワードをお忘れの方</a>
+        </div>
+        <p class="auth-help" th:if="${param.reset}">パスワードを変更しました。新しいパスワードでログインしてください。</p>
+
+        <!-- Google 영역은 기존 로그인 폼 바깥에 배치 -->
+        <section class="auth-google"
+                 th:if="${type == 'USER'}"
+                 aria-labelledby="google-title">
+
+            <div class="auth-divider"></div>
+
+            <h2 id="google-title">Googleアカウント</h2>
+
+            <!-- 비로그인 상태에서 Google 로그인 -->
+            <div th:if="${!signedIn}">
+
+                <a class="auth-secondary auth-google-button"
+                   th:href="@{/oauth2/authorization/google}">
+                    Googleでログイン
+                </a>
+
+                <p class="auth-help">
+                    連携済みのGoogleアカウントでログインできます。
+                </p>
+
+                <p class="auth-help">
+                    初めて利用する場合は、会員登録と通常ログインの後に、
+                    ホーム画面のアカウント欄からGoogleアカウントを連携してください。
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- 기존 회원가입 안내 유지 -->
+        <div class="auth-card-bottom">
+
+            <span>アカウントをお持ちでない方</span>
+
+            <a th:href="@{/join(type=${type})}">
+                新規会員登録
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="auth-footer">
+    <p>日本のおいしいお店を、もっと身近に。</p>
+    <small>© Food Order</small>
+</footer>
+
+</body>
+</html>

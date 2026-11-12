@@ -230,6 +230,7 @@ a:hover {
 .section-more:hover {
     color: var(--brand-dark);
 }
+
 .restaurant-detail-nav {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -268,6 +269,7 @@ main:has(#restaurant-map:target) .restaurant-detail-nav a[href="#restaurant-map"
     background: var(--brand-dark);
     color: #fff;
 }
+
 
 /* =========================
    Popular Regions
